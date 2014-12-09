@@ -1,0 +1,6 @@
+*.hg
+/clientcode*
+.*project
+*.pyc
+init.py
+interact_api.py
