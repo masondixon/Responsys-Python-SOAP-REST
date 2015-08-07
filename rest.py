@@ -20,6 +20,7 @@ class rest_api(object):
     List_Service_Url = '/rest/api/v1/lists/'
     
     Trigger_Service_Url = '/rest/api/v1/campaigns/'
+    HAtrigger_Service_Url = '/rest/haApi/v1/campaigns/'
     Trigger_SMS_Service_Url = '/sms'
     Trigger_EMAIL_Service_Url = '/email'
     
@@ -52,7 +53,7 @@ class rest_api(object):
     def login(self, login_url, login, password):
         
         payload = {'user_name': login, 'auth_type': 'password', 'password': password}
-        login_request = requests.post( login_url + self.Service_Url, params=payload)
+        login_request = requests.post( login_url + self.Service_Url, data=payload )
         response = login_request.json()
         
         try:
@@ -76,7 +77,7 @@ class rest_api(object):
         if self.Auth_Token is not None:
             request_payload = {'auth_type':'token'}
             header_payload  = {'Authorization':self.Auth_Token}            
-            refresh_request = requests.post( login_url + self.Service_Url, params=request_payload, headers=header_payload)
+            refresh_request = requests.post( login_url + self.Service_Url, data=request_payload, headers=header_payload)
             
             return refresh_request.json()
 
@@ -106,7 +107,7 @@ class rest_api(object):
             triggerParams['mergeRule'] = mergeRule    
             header_payload  = {'Authorization':self.Auth_Token,'Content-type': 'application/json'}
 
-            triggerSMS_request = requests.post(self.End_Point + self.Trigger_Service_Url + campaignName + self.Trigger_EMAIL_Service_Url, data=json.dumps(triggerParams), headers=header_payload)
+            triggerSMS_request = requests.post(self.End_Point + self.HAtrigger_Service_Url + campaignName + self.Trigger_EMAIL_Service_Url, data=json.dumps(triggerParams), headers=header_payload)
             
             return triggerSMS_request.json()
         else:         
@@ -145,7 +146,6 @@ class rest_api(object):
             
             for value_pairs in data:
                 optionalDataArray = []
-            
                 
                 for key_name in value_pairs.iterkeys():
                     optionalData = {'name': key_name, 'value' : value_pairs[key_name] }
