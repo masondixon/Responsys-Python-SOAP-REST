@@ -4,3 +4,4 @@
 *.pyc
 init.py
 interact_api.py
+rest_dontSourceMe.py

@@ -19,7 +19,11 @@ def login_and_refresh_token( login_url, login, password):
         print (e)
 
 
-def login_and_mergeRecord():
+'''
+Begin contact list management
+'''
+
+def mergeRecord():
     try:
         test = rest_api( debug=True )
         fieldNames = ['EMAIL_ADDRESS_', 'CITY_']
@@ -36,12 +40,211 @@ def login_and_mergeRecord():
         
         test.login('https://loginX.responsys.net', '******', '*******')
         
-        test.manageList('Mason','masonList1', recordData, mergeRule)
+        response_json = test.manageContactList('Mason','masonList1', recordData, mergeRule)
+        
+        print( response_json.content )
         
     except requests.exceptions.RequestException as e:
         print (e)
+        
+        
+def retrieveRecord():
+    try:
+        
+        test = rest_api( debug=True )
+        list_name = 'masonList'
+        identifier = 'e' # e is for email
+        fields = 'RIID_,FIRST_NAME,CITY_'
+        recipient_id = 'mdixon7@gmail.com'
+
+        test.login('https://loginX.responsys.net', '******', '*******')
+        
+        response_json = test.retrieveContactListMember(list_name, identifier, fields, recipient_id)
+        
+        print( response_json )
+        
+    except requests.exceptions.RequestException as e:
+        print (e)
+        
+def retrieveRecordByRIID():
+    try:
+        #24720425
+        test = rest_api( debug=True )
+        list_name = 'masonList'
+        fields = 'EMAIL_ADDRESS_,FIRST_NAME,CITY_'
+        recipient_id = '409580667'
+
+        test.login('https://loginX.responsys.net', '******', '*******')
+        
+        response_json = test.retrieveContactListMemberByRIID(list_name, fields, recipient_id)
+        
+        print( response_json )
+        
+    except requests.exceptions.RequestException as e:
+        print (e)
+        
+        
+        
+'''
+End contact list management
+'''
+        
+'''
+Begin profile extension table management
+'''
+        
+def retrieveAllPetsByList():
+    try:
+        #24720425
+        test = rest_api( debug=True )
+        list_name = 'masonList'
+        test.login('https://loginX.responsys.net', '******', '*******')
+        
+        response_json = test.retrievePetsByList(list_name)
+        
+        print( response_json )
+        
+    except requests.exceptions.RequestException as e:
+        print (e)
+           
+        
+def createProfileExtensionTable():
+    try:
+        
+        test = rest_api( debug=True )
+        
+        list_name = 'masonList'
+        table_name = 'test_PET_table'
+        folder_name = 'mason'
+        
+        fields = []
+        field_1 = {'fieldName' : 'Field_1', 'fieldType' : 'STR500'}
+        field_2 = {'fieldName' : 'Field_2', 'fieldType' : 'STR500'}
+        
+        fields.append(field_1)
+        fields.append(field_2)
+        
+        test.login('https://loginX.responsys.net', '******', '*******')
+        create_response = test.createProfileExtensionTable(list_name, table_name, folder_name, fields)
+        print( create_response.content )
+        
+    except requests.exceptions.RequestException as e:
+        print (e)
+        
+
+def updateProfileExtensionTableRecord():
+    try:
+        test = rest_api( debug=True )
+        list_name = 'masonList'
+        table_name = 'test_PET_table'
+        
+        fieldNames = ['RIID_','FIELD_1','FIELD_2']
+        fieldValuesArray = []
+        fields_1 = ['409580667','some_val1','some_val2']
+        fields_2 = ['123455','some_val3','some_val4']
+        fieldValuesArray.append(fields_1)
+        fieldValuesArray.append(fields_2)
+        
+        recordData = test.build_RecordData2(fieldNames, fieldValuesArray)
+        
+        insertOnNoMatch = True
+        updateOnMatch = "REPLACE_ALL"
+        matchColumn = "RIID"
+        
+        test.login('https://loginX.responsys.net', '******', '*******')
+        update_response = test.updateProfileExtensionTableRecord(list_name, table_name, recordData, insertOnNoMatch, updateOnMatch, matchColumn)
+        print( update_response.content )
+        
+        
+    except requests.exceptions.RequestException as e:
+        print (e)
+        
+def retrieveProfileExtensionTableRecordByRIID():
+    try:
+        test = rest_api( debug=True )
+        list_name = 'masonList'
+        table_name = 'test_PET_table'
+        fields = 'FIELD_1,FIELD_2'
+        recipientId = '415580852'
+        
+        test.login('https://loginX.responsys.net', '******', '*******')
+        retrieve_response = test.retrieveFromProfileExtensionTableByRIID(list_name, table_name, fields, recipientId)
+        print( retrieve_response.content ) 
+    except requests.exceptions.RequestException as e:
+        print (e)
+
+        
+def deleteProfileExtensionTableRecord():
+    try:
+        test = rest_api( debug=True )
+        list_name = 'masonList'
+        table_name = 'test_PET_table'
+        identifier = 'r' # r is for recipientId aka RIID
+        recipientId = 415580852
+        
+        test.login('https://loginX.responsys.net', '******', '*******')
+        delete_response = test.deleteProfileExtensionTableRecord(list_name, table_name, identifier, recipientId)
+        print( delete_response.content )
+        
+    except requests.exceptions.RequestException as e:
+        print (e)
+'''
+End profile extension table management
+'''        
+        
+'''
+Begin supplemental table management
+'''
+def createSupplementalTable():
+    try:
+        test = rest_api( debug=True )
+        
+    except requests.exceptions.RequestException as e:
+        print (e)
+
+        
+def updateSupplementalTableRecord():
+    try:
+        test = rest_api( debug=True )
     
-def login_and_merge_and_triggerSMS():
+    except requests.exceptions.RequestException as e:
+        print (e)
+
+
+def retrieveSupplementalTableRecord():
+    try:
+        test = rest_api( debug=True )
+    
+    except requests.exceptions.RequestException as e:
+        print (e)
+        
+def deleteSupplementalTableRecord():
+    try:
+        test = rest_api( debug=True )
+    
+    except requests.exceptions.RequestException as e:
+        print (e)
+
+'''
+END Supplemental table management
+'''
+
+'''
+Begin PROGRAM aka Custom Event
+'''
+def triggerCustomEvent():
+    try:
+        test = rest_api( debug=True )
+        
+    except requests.exceptions.RequestException as e:
+        print (e)
+
+
+        
+'''
+Begin campaign management     
+'''    
+def triggerSMS():
     try:
         
         test = rest_api( debug=True )
@@ -76,7 +279,7 @@ def login_and_merge_and_triggerSMS():
     except requests.exceptions.RequestException as e:
         print (e)
         
-def login_and_triggerEmail():
+def triggerEmail():
     try:
         
         test = rest_api( debug=True )
@@ -125,3 +328,7 @@ def login_and_triggerEmail():
 #test = login_and_refresh_token('https://login5.responsys.net', 'someLogin', 'somePass')
 #test = login_and_merge_and_triggerSMS()
 #test = login_and_triggerEmail()
+#test = retrieveAllPetsByList()
+#test = deleteProfileExtensionTableRecord()
+#test = retrieveProfileExtensionTableRecordByRIID()
+test = updateProfileExtensionTableRecord()
