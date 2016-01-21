@@ -19,7 +19,7 @@ class rest_api(object):
     List_Service_Url = '/rest/api/v1/lists/'
     PET_Service_Url  = '/listExtensions'
     
-    HAtrigger_Service_Url     = '/rest/haApi/v1.1/campaigns/'
+    HAtrigger_Service_Url     = '/rest/haApi/v1/campaigns/'
     Trigger_Service_Url       = '/rest/api/v1/campaigns/'
     Trigger_SMS_Service_Url   = '/sms'
     Trigger_EMAIL_Service_Url = '/email'
