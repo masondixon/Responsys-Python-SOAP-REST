@@ -9,11 +9,11 @@ import requests
 def login_and_refresh_token( login_url, login, password):     
 
     try:
-        test = rest_api( debug=True )
-        test.login(login_url, login, password)
-        test.refreshToken( login_url )
-        print (test.Auth_Token)
-        print (test.End_Point)
+        instance = rest_api( debug=True )
+        instance.login(login_url, login, password)
+        instance.refreshToken( login_url )
+        print (instance.Auth_Token)
+        print (instance.End_Point)
         
     except requests.exceptions.RequestException as e:
         print (e)
@@ -25,7 +25,7 @@ Begin contact list management
 
 def mergeRecord():
     try:
-        test = rest_api( debug=True )
+        instance = rest_api( debug=True )
         fieldNames = ['EMAIL_ADDRESS_', 'CITY_']
         fieldValuesArray = []
         record_vals_1 = ['mdixon@email.com', 'san bruno']
@@ -34,13 +34,13 @@ def mergeRecord():
         fieldValuesArray.append(record_vals_1)
         fieldValuesArray.append(record_vals_2)
         
-        recordData = test.build_RecordData(fieldNames, fieldValuesArray)
+        recordData = instance.build_RecordData(fieldNames, fieldValuesArray)
         
-        mergeRule  = test.build_ListMergeRule( True, 'REPLACE_ALL', 'EMAIL_ADDRESS_', None, 'NONE', 'OPTOUT')
+        mergeRule  = instance.build_ListMergeRule( True, 'REPLACE_ALL', 'EMAIL_ADDRESS_', None, 'NONE', 'OPTOUT')
         
-        test.login('https://loginX.responsys.net', '******', '*******')
+        instance.login('https://loginX.responsys.net', '******', '*******')
         
-        response_json = test.manageContactList('Mason','masonList1', recordData, mergeRule)
+        response_json = instance.manageContactList('Mason','masonList1', recordData, mergeRule)
         
         print( response_json.content )
         
@@ -51,15 +51,15 @@ def mergeRecord():
 def retrieveRecord():
     try:
         
-        test = rest_api( debug=True )
+        instance = rest_api( debug=True )
         list_name = 'masonList'
         identifier = 'e' # e is for email
         fields = 'RIID_,FIRST_NAME,CITY_'
-        recipient_id = 'mdixon7@gmail.com'
+        recipient_id = 'mdixon@email.com'
 
-        test.login('https://loginX.responsys.net', '******', '*******')
+        instance.login('https://loginX.responsys.net', '******', '*******')
         
-        response_json = test.retrieveContactListMember(list_name, identifier, fields, recipient_id)
+        response_json = instance.retrieveContactListMember(list_name, identifier, fields, recipient_id)
         
         print( response_json )
         
@@ -69,14 +69,14 @@ def retrieveRecord():
 def retrieveRecordByRIID():
     try:
         #24720425
-        test = rest_api( debug=True )
+        instance = rest_api( debug=True )
         list_name = 'masonList'
         fields = 'EMAIL_ADDRESS_,FIRST_NAME,CITY_'
         recipient_id = '409580667'
 
-        test.login('https://loginX.responsys.net', '******', '*******')
+        instance.login('https://loginX.responsys.net', '******', '*******')
         
-        response_json = test.retrieveContactListMemberByRIID(list_name, fields, recipient_id)
+        response_json = instance.retrieveContactListMemberByRIID(list_name, fields, recipient_id)
         
         print( response_json )
         
@@ -96,11 +96,11 @@ Begin profile extension table management
 def retrieveAllPetsByList():
     try:
         #24720425
-        test = rest_api( debug=True )
+        instance = rest_api( debug=True )
         list_name = 'masonList'
-        test.login('https://loginX.responsys.net', '******', '*******')
+        instance.login('https://loginX.responsys.net', '******', '*******')
         
-        response_json = test.retrievePetsByList(list_name)
+        response_json = instance.retrievePetsByList(list_name)
         
         print( response_json )
         
@@ -111,10 +111,10 @@ def retrieveAllPetsByList():
 def createProfileExtensionTable():
     try:
         
-        test = rest_api( debug=True )
+        instance = rest_api( debug=True )
         
         list_name = 'masonList'
-        table_name = 'test_PET_table'
+        table_name = 'instance_PET_table'
         folder_name = 'mason'
         
         fields = []
@@ -124,8 +124,8 @@ def createProfileExtensionTable():
         fields.append(field_1)
         fields.append(field_2)
         
-        test.login('https://loginX.responsys.net', '******', '*******')
-        create_response = test.createProfileExtensionTable(list_name, table_name, folder_name, fields)
+        instance.login('https://loginX.responsys.net', '******', '*******')
+        create_response = instance.createProfileExtensionTable(list_name, table_name, folder_name, fields)
         print( create_response.content )
         
     except requests.exceptions.RequestException as e:
@@ -134,9 +134,9 @@ def createProfileExtensionTable():
 
 def updateProfileExtensionTableRecord():
     try:
-        test = rest_api( debug=True )
+        instance = rest_api( debug=True )
         list_name = 'masonList'
-        table_name = 'test_PET_table'
+        table_name = 'instance_PET_table'
         
         fieldNames = ['RIID_','FIELD_1','FIELD_2']
         fieldValuesArray = []
@@ -145,14 +145,14 @@ def updateProfileExtensionTableRecord():
         fieldValuesArray.append(fields_1)
         fieldValuesArray.append(fields_2)
         
-        recordData = test.build_RecordData2(fieldNames, fieldValuesArray)
+        recordData = instance.build_RecordData2(fieldNames, fieldValuesArray)
         
         insertOnNoMatch = True
         updateOnMatch = "REPLACE_ALL"
         matchColumn = "RIID"
         
-        test.login('https://loginX.responsys.net', '******', '*******')
-        update_response = test.updateProfileExtensionTableRecord(list_name, table_name, recordData, insertOnNoMatch, updateOnMatch, matchColumn)
+        instance.login('https://loginX.responsys.net', '******', '*******')
+        update_response = instance.updateProfileExtensionTableRecord(list_name, table_name, recordData, insertOnNoMatch, updateOnMatch, matchColumn)
         print( update_response.content )
         
         
@@ -161,14 +161,14 @@ def updateProfileExtensionTableRecord():
         
 def retrieveProfileExtensionTableRecordByRIID():
     try:
-        test = rest_api( debug=True )
+        instance = rest_api( debug=True )
         list_name = 'masonList'
-        table_name = 'test_PET_table'
+        table_name = 'instance_PET_table'
         fields = 'FIELD_1,FIELD_2'
         recipientId = '415580852'
         
-        test.login('https://loginX.responsys.net', '******', '*******')
-        retrieve_response = test.retrieveFromProfileExtensionTableByRIID(list_name, table_name, fields, recipientId)
+        instance.login('https://loginX.responsys.net', '******', '*******')
+        retrieve_response = instance.retrieveFromProfileExtensionTableByRIID(list_name, table_name, fields, recipientId)
         print( retrieve_response.content ) 
     except requests.exceptions.RequestException as e:
         print (e)
@@ -176,14 +176,14 @@ def retrieveProfileExtensionTableRecordByRIID():
         
 def deleteProfileExtensionTableRecord():
     try:
-        test = rest_api( debug=True )
+        instance = rest_api( debug=True )
         list_name = 'masonList'
-        table_name = 'test_PET_table'
+        table_name = 'instance_PET_table'
         identifier = 'r' # r is for recipientId aka RIID
         recipientId = 415580852
         
-        test.login('https://loginX.responsys.net', '******', '*******')
-        delete_response = test.deleteProfileExtensionTableRecord(list_name, table_name, identifier, recipientId)
+        instance.login('https://loginX.responsys.net', '******', '*******')
+        delete_response = instance.deleteProfileExtensionTableRecord(list_name, table_name, identifier, recipientId)
         print( delete_response.content )
         
     except requests.exceptions.RequestException as e:
@@ -197,7 +197,7 @@ Begin supplemental table management
 '''
 def createSupplementalTable():
     try:
-        test = rest_api( debug=True )
+        instance = rest_api( debug=True )
         
     except requests.exceptions.RequestException as e:
         print (e)
@@ -205,7 +205,7 @@ def createSupplementalTable():
         
 def updateSupplementalTableRecord():
     try:
-        test = rest_api( debug=True )
+        instance = rest_api( debug=True )
     
     except requests.exceptions.RequestException as e:
         print (e)
@@ -213,14 +213,14 @@ def updateSupplementalTableRecord():
 
 def retrieveSupplementalTableRecord():
     try:
-        test = rest_api( debug=True )
+        instance = rest_api( debug=True )
     
     except requests.exceptions.RequestException as e:
         print (e)
         
 def deleteSupplementalTableRecord():
     try:
-        test = rest_api( debug=True )
+        instance = rest_api( debug=True )
     
     except requests.exceptions.RequestException as e:
         print (e)
@@ -234,7 +234,7 @@ Begin PROGRAM aka Custom Event
 '''
 def triggerCustomEvent():
     try:
-        test = rest_api( debug=True )
+        instance = rest_api( debug=True )
         
     except requests.exceptions.RequestException as e:
         print (e)
@@ -243,17 +243,16 @@ def triggerCustomEvent():
         
 '''
 Begin campaign management     
-'''    
+   
 def triggerSMS():
     try:
         
-        test = rest_api( debug=True )
+        instance = rest_api( debug=True )
         
         fieldNames = ['EMAIL_ADDRESS_', 'MOBILE_NUMBER_', 'MOBILE_COUNTRY_', 'MOBILE_PERMISSION_STATUS_']
         fieldValuesArray = []
         triggerDataArray = []
         record_vals_1 = ['email@smoracle.com', '16504835108', 'US', 'OPTOUT']
-        #record_vals_2 = ['mei.chan@oracle.com', '14083415539', 'US']
         
         triggerData = []
         opt1 = {'data_1':'api value 1'}
@@ -265,70 +264,57 @@ def triggerSMS():
         fieldValuesArray.append(record_vals_1)
         #fieldValuesArray.append(record_vals_2)
         
-        recordData  = test.build_RecordData(fieldNames, fieldValuesArray)
+        recordData  = instance.build_RecordData(fieldNames, fieldValuesArray)
         
-        triggerData = test.build_TriggerData(triggerDataArray)
+        triggerData = instance.build_TriggerData(triggerDataArray)
         
-        mergeRule  = test.build_ListMergeRule( True, 'REPLACE_ALL', 'EMAIL_ADDRESS_', None, 'NONE', 'OPTIN')
+        mergeRule  = instance.build_ListMergeRule( True, 'REPLACE_ALL', 'EMAIL_ADDRESS_', None, 'NONE', 'OPTIN')
     
-        test.login('https://loginX.responsys.net', '*******', '*******')
-        response = test.triggerSMS('MASON', recordData, triggerData, mergeRule)
+        instance.login('https://loginX.responsys.net', '*******', '*******')
+        response = instance.triggerSMS('MASON', recordData, triggerData, mergeRule)
         
         return response 
     
     except requests.exceptions.RequestException as e:
         print (e)
-        
+''' 
+                
 def triggerEmail():
     try:
         
-        test = rest_api( debug=True )
+        instance = rest_api( debug=True )
         
         fieldNames = ['EMAIL_ADDRESS_', 'CITY_']
         fieldValuesArray = []
         triggerDataArray = []
         
-        record_vals_1 = ['kity.daly@oracle.com', 'san bruno']
-        record_vals_2 = ['mdixon@gmail.com', 'martinez']
-        
+        record_vals_1 = ['mason.dixon@oracle.com', 'san bruno']
+
         triggerData_record1 = []
-        triggerData_record2 = []
         
-        opt1 = {'FIRST_NAME':'Mason'}
-        opt2 = {'ORDER_NUMBER': '1234567'}
+        optional_data_1 = {'FIRST_NAME':'Mason'}
+        optional_data_2 = {'LAST_NAME':'Dixon'}
         
-        opt3 = {'FIRST_NAME':'Mike'}
-        opt4 = {'ORDER_NUMBER': '32432424'}
-        
-        triggerData_record1.append(opt1)
-        triggerData_record1.append(opt2)
-        
-        triggerData_record2.append(opt3)
-        triggerData_record2.append(opt4)
+        triggerData_record1.append(optional_data_1)
+        triggerData_record1.append(optional_data_2)
         
         triggerDataArray.append(triggerData_record1)
-        triggerDataArray.append(triggerData_record2)
         
         fieldValuesArray.append(record_vals_1)
-        fieldValuesArray.append(record_vals_2)
         
-        recordData  = test.build_RecordData(fieldNames, fieldValuesArray)
+        recordData  = instance.build_RecordData(fieldNames, fieldValuesArray)
         
-        triggerData = test.build_TriggerData(triggerDataArray)
+        triggerData = instance.build_TriggerData(triggerDataArray)
         
-        mergeRule  = test.build_ListMergeRule( True, 'REPLACE_ALL', 'EMAIL_ADDRESS_', None, 'NONE', 'OPTIN')
+        triggerData = None
+        
+        mergeRule  = instance.build_ListMergeRule( True, 'REPLACE_ALL', 'EMAIL_ADDRESS_', None, 'NONE', 'OPTIN')
     
-        test.login('https://loginX.responsys.net', '*******', '*******')
-        response = test.triggerEmail('masonCampaign1', recordData, triggerData, mergeRule)
+        instance.login('https://loginX.responsys.net', '*********', '*******')
+        response = instance.triggerEmail('masonCampaign1', recordData, triggerData, mergeRule)
         print(response)
     
     except requests.exceptions.RequestException as e:
         print (e)
-
-#test = login_and_refresh_token('https://login5.responsys.net', 'someLogin', 'somePass')
-#test = login_and_merge_and_triggerSMS()
-#test = login_and_triggerEmail()
-#test = retrieveAllPetsByList()
-#test = deleteProfileExtensionTableRecord()
-#test = retrieveProfileExtensionTableRecordByRIID()
-test = updateProfileExtensionTableRecord()
+        
+   

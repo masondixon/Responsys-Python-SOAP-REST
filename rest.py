@@ -1,16 +1,10 @@
 '''
 Created on Nov 5, 2014
 '''
-from twisted.web.http_headers import Headers
-
-'''
-Updated on August 8th, 2015 against 6.25 Interact Platform
-'''
 
 import requests
 import json
 import logging
-import sys
 
 
 class rest_api(object):
@@ -25,7 +19,7 @@ class rest_api(object):
     List_Service_Url = '/rest/api/v1/lists/'
     PET_Service_Url  = '/listExtensions'
     
-    HAtrigger_Service_Url     = '/rest/haApi/v1/campaigns/'
+    HAtrigger_Service_Url     = '/rest/haApi/v1.1/campaigns/'
     Trigger_Service_Url       = '/rest/api/v1/campaigns/'
     Trigger_SMS_Service_Url   = '/sms'
     Trigger_EMAIL_Service_Url = '/email'
@@ -48,7 +42,7 @@ class rest_api(object):
             except ImportError:
                 # Python 2
                 import httplib as http_client
-            http_client.HTTPConnection.debuglevel = 1
+                http_client.HTTPConnection.debuglevel = 1
             
             # You must initialize logging, otherwise you'll not see debug output.
             logging.basicConfig() 
@@ -63,7 +57,8 @@ class rest_api(object):
     '''
    
     '''
-    Authenticate, to obtain an auth token....
+    Authenticate, to obtain an auth token and service end point
+    Set token and end point
     '''     
     def login(self, login_url, login, password):
         
@@ -267,14 +262,14 @@ class rest_api(object):
     def triggerEmail(self, campaignName, recordData, triggerData, mergeRule):  
 
         triggerParams = {}
+        triggerParams['recordData']  = recordData
+        triggerParams['mergeRule']   = mergeRule
         triggerParams['triggerData'] = triggerData
-        triggerParams['recordData'] = recordData
-        triggerParams['mergeRule'] = mergeRule    
         header_payload  = {'Authorization':self.Auth_Token,'Content-type': 'application/json'}
-
-        triggerSMS_request = requests.post(self.End_Point + self.Trigger_Service_Url + campaignName + self.Trigger_EMAIL_Service_Url, data=json.dumps(triggerParams), headers=header_payload)
         
-        return triggerSMS_request.json()
+        triggerEmail_request = requests.post( self.End_Point + self.Trigger_Service_Url + campaignName + '/email', data=json.dumps( triggerParams ), headers=header_payload )
+        
+        return triggerEmail_request.json()
  
     '''
     Merging members into a profile list and subsequently send them an SMS message
@@ -283,8 +278,8 @@ class rest_api(object):
 
         triggerParams = {}
         triggerParams['triggerData'] = triggerData
-        triggerParams['recordData'] = recordData
-        triggerParams['mergeRule'] = mergeRule    
+        triggerParams['recordData']  = recordData
+        triggerParams['mergeRule']   = mergeRule    
         header_payload  = {'Authorization':self.Auth_Token,'Content-type': 'application/json'}
 
         triggerSMS_request = requests.post(self.End_Point + self.Trigger_Service_Url + campaignName + self.Trigger_SMS_Service_Url, data=json.dumps(triggerParams), headers=header_payload)
@@ -300,21 +295,23 @@ class rest_api(object):
     The triggerData nodes can contain many optionalData name / value pairs however.
     '''
     def build_TriggerData(self, dataArray):
-        
-        triggerDataArray = []
-        
-        for data in dataArray:
+ 
+        optionalDataCollection = []
+        for data in dataArray: 
             
-            for value_pairs in data:
-                optionalDataArray = []
+            if data is not None:            
+                optionalData = {}
+                optionalData['optionalData'] = []
                 
-                for key_name in value_pairs.iterkeys():
-                    optionalData = {'name': key_name, 'value' : value_pairs[key_name] }
-                    optionalDataArray.append( optionalData )
-                    
-                triggerDataArray.append({'optionalData' : optionalDataArray })
-            
-        return triggerDataArray
+                for value_pairs in data:
+                    for key_name in value_pairs.iterkeys():
+                        optionalData['optionalData'].append( {'name': key_name, 'value' : value_pairs[key_name] } )
+                optionalDataCollection.append( optionalData )       
+            else:
+                optionalDataCollection.append( None ) 
+
+        return optionalDataCollection
+
 
     def build_RecordData(self, fieldNames, fieldValuesArray):
         
@@ -326,7 +323,7 @@ class rest_api(object):
         for fieldValues in fieldValuesArray:
             recordData['records'].append({'fieldValues' : fieldValues})
             
-        print(recordData)
+        #print(recordData)
         return recordData
     
     '''
@@ -341,7 +338,7 @@ class rest_api(object):
         for fieldValues in fieldValuesArray:
             recordData['records'].append( fieldValues )
             
-        print(recordData)
+        #print(recordData)
         return recordData
         
                 
