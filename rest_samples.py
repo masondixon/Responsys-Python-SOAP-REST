@@ -288,12 +288,12 @@ def triggerEmail():
         fieldValuesArray = []
         triggerDataArray = []
         
-        record_vals_1 = ['mason.dixon@oracle.com', 'san bruno']
+        record_vals_1 = ['mark.l.jarvis@oracle.com', 'san bruno']
 
         triggerData_record1 = []
         
-        optional_data_1 = {'FIRST_NAME':'Mason'}
-        optional_data_2 = {'LAST_NAME':'Dixon'}
+        optional_data_1 = {'FIRST_NAME':'Masonovich'}
+        optional_data_2 = {'LAST_NAME':'Dixonovich'}
         
         triggerData_record1.append(optional_data_1)
         triggerData_record1.append(optional_data_2)
