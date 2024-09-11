@@ -1,4 +1,4 @@
-Python_responsys
+Responsys Python samples
 ================
 
 responsys rest and soap in python 2.7 w/ requests and suds<br>
